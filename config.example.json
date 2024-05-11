@@ -1,0 +1,14 @@
+{
+  "source": {
+    "user": "",
+    "password": "",
+    "host": "",
+    "dbName": ""
+  },
+  "reference": {
+    "user": "",
+    "password": "",
+    "host": "",
+    "dbName": ""
+  }
+}

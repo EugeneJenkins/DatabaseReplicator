@@ -1,0 +1,29 @@
+{
+    "name": "eugene/database-replicator",
+    "description": "Database replicator",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Eugene\\DatabaseReplicator\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Eugene Jenkins",
+            "email": "skreker99@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "scripts": {
+        "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon"
+    },
+    "require": {
+        "php": ">=8.2",
+        "ext-pdo": "*"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "*",
+        "fakerphp/faker": "2.0.x-dev"
+    }
+}
