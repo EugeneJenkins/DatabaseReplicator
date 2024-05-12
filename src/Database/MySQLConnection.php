@@ -12,7 +12,7 @@ readonly class MySQLConnection implements ConnectionInterface
     {
         $this->connection = new PDO(
             sprintf('mysql:host=%s;dbname=%s', $dto->getHost(), $dto->getDbName()),
-            $dto->getName(),
+            $dto->getUser(),
             $dto->getPassword()
         );
     }

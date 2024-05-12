@@ -5,13 +5,21 @@ namespace Eugene\DatabaseReplicator\Database;
 
 readonly class DatabaseSettingsDTO
 {
+    /**
+     * @param array{
+     *      "user": string,
+     *      "password": string,
+     *      "host": string,
+     *      "dbName": string
+     * } $settings
+     */
     public function __construct(private array $settings)
     {
     }
 
-    public function getName(): string
+    public function getUser(): string
     {
-        return $this->settings['name'];
+        return $this->settings['user'];
     }
 
     public function getPassword(): string
@@ -21,7 +29,7 @@ readonly class DatabaseSettingsDTO
 
     public function getHost(): string
     {
-        return $this->settings['password'];
+        return $this->settings['host'];
     }
 
     public function getDbName(): string

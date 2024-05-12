@@ -4,6 +4,7 @@ namespace Eugene\DatabaseReplicator\Database;
 
 use PDO;
 use PDOStatement;
+use Eugene\DatabaseReplicator\Exceptions\DatabaseException;
 
 class DatabaseManager
 {
@@ -18,6 +19,7 @@ class DatabaseManager
 
     /**
      * @return array<Table>
+     * @throws DatabaseException
      */
     public function getAllTables(): array
     {
@@ -41,21 +43,32 @@ class DatabaseManager
 
     /**
      * @return array <string>
+     * @throws DatabaseException
      */
     public function getAllTableNames(): array
     {
-        if (empty($this->tableNames)){
+        if (empty($this->tableNames)) {
             $this->getAllTables();
         }
 
         return $this->tableNames;
     }
 
+    /**
+     * @param string $sql
+     * @return array<mixed>
+     * @throws DatabaseException
+     */
     public function getAll(string $sql): array
     {
         return $this->query($sql)->fetchAll();
     }
 
+    /**
+     * @param string $sql
+     * @return array<mixed>
+     * @throws DatabaseException
+     */
     public function get(string $sql): array
     {
         $response = $this->query($sql)->fetch();
@@ -67,11 +80,25 @@ class DatabaseManager
         return $response;
     }
 
+    /**
+     * @throws DatabaseException
+     */
     private function query(string $sql): PDOStatement
     {
-        return $this->connection->getConnection()->query($sql, PDO::FETCH_ASSOC);
+        $pdoStatement = $this->connection->getConnection()->query($sql, PDO::FETCH_ASSOC);
+
+        if ($pdoStatement === false) {
+            throw new DatabaseException('PDOStatement returned with false');
+        }
+
+        return $pdoStatement;
     }
 
+    /**
+     * @param string $sql
+     * @param array<mixed> $data
+     * @return bool
+     */
     public function multipleInsert(string $sql, array $data): bool
     {
         return $this->connection->getConnection()->prepare($sql)->execute($data);

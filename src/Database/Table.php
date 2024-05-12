@@ -35,38 +35,22 @@ class Table
         return $this->manager->getAll("SELECT * FROM {$this->getName()}");
     }
 
-    public function insertRow(array $data): bool
+    public function generateQueries(array $data): array
     {
-        if (empty($data)) {
-            return false;
+        $queries = [];
+
+        $test = $data;
+        $columns = implode(',', array_map(
+                fn($item) => sprintf('`%s`', $item),
+                array_keys(array_shift($test)))
+        );
+
+        foreach ($data as $row) {
+            $values = implode(',', array_map(fn($item) => sprintf('"%s"', $item), $row));
+
+            $queries[] = "INSERT INTO {$this->getName()} ($columns) VALUES ($values)";
         }
 
-        $columns = implode(',', array_keys(array_shift($data)));
-
-        try {
-            $this->manager->beginTransaction();
-
-            foreach ($data as $row) {
-                $bind = [];
-                foreach ($row as $key => $item) {
-                    $bind[":$key"] = $item ?? '';
-                }
-
-                $values = implode(',', array_keys($bind));
-
-                $sql = "INSERT INTO {$this->getName()} ($columns) VALUES ($values)";
-
-                $this->manager->multipleInsert($sql, $bind);
-            }
-
-            $this->manager->commitBackTransaction();
-        } catch (Exception $exception) {
-            echo $exception->getMessage();
-
-            $this->manager->rollBackTransaction();
-            return false;
-        }
-
-        return true;
+        return $queries;
     }
 }
